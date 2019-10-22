@@ -1,12 +1,36 @@
 $(document).on("turbolinks:load", function () {
-  if ($('.static_pages.index').length > 0) {
-    indexTasks(function (response) {
-      var htmlString = response.tasks.map(function(task) {
-        return "<div class='col-12 mb-3 p-2 border rounded task' data-id='" + task.id + "'> \
-          " + task.content + "\
-          </div>";
-      });
-      $("#tasks").html(htmlString);
-    });
-  }
+
+  getAndDisplayAllTasks();
+
+  $('#create-task').on('submit', function (e) {
+    e.preventDefault();
+    createTask(getAndDisplayAllTasks);
+  });
+
+  $(document).on('click', '.delete', function () {
+   deleteTask($(this).data('id'));
+   getAndDisplayAllTasks ();
+  });
+
+
+  $(document).on('change', '.mark-complete', function () {
+    if (this.checked) {
+      markComplete($(this).data('id'));
+      getAndDisplayAllTasks ();
+    } else {
+      markActive($(this).data('id'));
+      getAndDisplayAllTasks ();
+    }
+  });
+
+  $(document).on('click', '#all', function () {
+    getAndDisplayAllTasks();
+  });
+  $(document).on('click', '#active', function () {
+    getAndDisplayAllTasks('active');
+  });
+  $(document).on('click', '#completed', function () {
+    getAndDisplayAllTasks('completed');
+  });
+
 });
